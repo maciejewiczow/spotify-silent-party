@@ -1,0 +1,27 @@
+{
+  "name": "spotify-silent-party",
+  "version": "1.0.0",
+  "description": "App that allows you to sync playback of several premium users through network, creating silent party",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maciejewiczow/spotify-silent-party.git"
+  },
+  "keywords": [
+    "Spotify",
+    "playback",
+    "sync"
+  ],
+  "author": "Maciej Adamus",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/maciejewiczow/spotify-silent-party/issues"
+  },
+  "homepage": "https://github.com/maciejewiczow/spotify-silent-party#readme",
+  "devDependencies": {
+    "typescript": "^2.9.2"
+  }
+}
