@@ -38,7 +38,9 @@ declare module 'spotify-web-api-node' {
         MultipleCategoriesResponse,
         PlayHistoryObject,
         CurrentlyPlayingResponse,
-        CurrentlyPlayingContextResponse
+        CurrentlyPlayingContextResponse,
+        AuthenticationTokenResponse,
+        ClientCredentialsAuthResponse
     } from 'spotify-api-response-schemas'
 
     /**
@@ -174,7 +176,7 @@ declare module 'spotify-web-api-node' {
     }
 
     export default class SpotifyApi {
-        constructor(credentials: Credentials)
+        constructor(credentials?: Credentials)
 
         setCredentials(credentials: string | Credentials): void
 
@@ -1059,5 +1061,39 @@ declare module 'spotify-web-api-node' {
          */
         getPlaylistsForCategory(categoryId: string, options?: FeaturedPlaylistsOptions): Promise<ApiResponse<PagingObject<PlaylistObjectSimplified>>>
         getPlaylistsForCategory(categoryId: string, options: FeaturedPlaylistsOptions, callback: CallbackFn<PagingObject<PlaylistObjectSimplified>>): void
+
+        /**
+         * Request an access token using the Client Credentials flow.
+         * Requires that client ID and client secret has been set previous to the call.
+         * @param {Object} options Options.
+         * @param {requestCallback} [callback] Optional callback method to be called instead of the promise.
+         * @returns {Promise|undefined} A promise that if successful, resolves into an object containing the access token,
+         *          token type and time to expiration. If rejected, it contains an error object. Not returned if a callback is given.
+         */
+        clientCredentialsGrant(options?: {}): Promise<ApiResponse<ClientCredentialsAuthResponse>>
+        clientCredentialsGrant(options: {}, callback: CallbackFn<ClientCredentialsAuthResponse>): void
+
+        /**
+         * Request an access token using the Authorization Code flow.
+         * Requires that client ID, client secret, and redirect URI has been set previous to the call.
+         * @param {string} code The authorization code returned in the callback in the Authorization Code flow.
+         * @param {requestCallback} [callback] Optional callback method to be called instead of the promise.
+         * @returns {Promise|undefined} A promise that if successful, resolves into an object containing the access token,
+         *          refresh token, token type and time to expiration. If rejected, it contains an error object.
+         *          Not returned if a callback is given.
+         */
+        authorizationCodeGrant(code: string): Promise<ApiResponse<AuthenticationTokenResponse>>
+        authorizationCodeGrant(code: string, callback: CallbackFn<AuthenticationTokenResponse>): void
+
+        /**
+         * Refresh the access token given that it hasn't expired.
+         * Requires that client ID, client secret and refresh token has been set previous to the call.
+         * @param {requestCallback} [callback] Optional callback method to be called instead of the promise.
+         * @returns {Promise|undefined} A promise that if successful, resolves to an object containing the
+         *          access token, time to expiration and token type. If rejected, it contains an error object.
+         *          Not returned if a callback is given.
+         */
+        refreshAccessToken(): Promise<ApiResponse<AuthenticationTokenResponse>>
+        refreshAccessToken(callback: CallbackFn<AuthenticationTokenResponse>): void
     }
 }

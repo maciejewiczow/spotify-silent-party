@@ -124,6 +124,30 @@ declare module 'spotify-api-response-schemas' {
     export interface SingleAlbumResponse extends AlbumObjectFull {}
 
     /**
+     * Response returned when getting access token or refreshing it
+     * POST https://accounts.spotify.com/api/token
+     * https://developer.spotify.com/documentation/general/guides/authorization-guide/#2-have-your-application-request-refresh-and-access-tokens-spotify-returns-access-and-refresh-tokens
+     */
+    export interface AuthenticationTokenResponse {
+        access_token: string
+        refresh_token: string
+        expires_in: number
+        token_type: 'Bearer'
+        scope: string
+    }
+
+    /**
+     * Response returned when using Client Credentials authentication flow
+     * POST https://accounts.spotify.com/api/token
+     * https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
+     */
+    export interface ClientCredentialsAuthResponse {
+        access_token: string
+        expires_in: number
+        token_type: 'Bearer'
+    }
+
+    /**
      * Get Several Albums
      *
      * GET /v1/albums?ids={ids}
