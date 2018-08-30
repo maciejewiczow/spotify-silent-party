@@ -1,1 +1,3 @@
-export { loginController } from 'backend/controllers/loginController'
+import { AuthenticationController } from 'backend/controllers/AuthenticationController'
+
+export default [AuthenticationController]

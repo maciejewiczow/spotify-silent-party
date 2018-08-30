@@ -1,20 +1,24 @@
-import express from 'express'
+import 'reflect-metadata'
+
+import { createExpressServer } from 'routing-controllers'
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
-import SpotifyApi from 'spotify-web-api-node'
 
-export const SCOPES = ['user-read-email', 'user-read-private', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing']
-export const STATE_KEY = 'spoti_authentication_state'
+import controllers from 'backend/controllers'
 
 dotenv.config()
-const app = express()
+
+const app = createExpressServer({
+    controllers
+})
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(helmet())
 app.use(compression())
 
-// app.use('/', router)
+export const STATE_KEY = 'spoti_authentication_state'
+export const SCOPES = ['user-read-email', 'user-read-private', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing']
 
 export default app
