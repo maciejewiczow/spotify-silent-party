@@ -1,25 +1,47 @@
-import { BadRequestError } from 'routing-controllers'
-import { NextFunction, Request, Response } from 'express'
+import { BadRequestError, ForbiddenError, InternalServerError } from 'routing-controllers'
+import { NextFunction, Response, Request } from 'express'
 import uuid from 'uuid'
+import jwt from 'jwt-simple'
 
-import { STATE_KEY } from 'index'
+import { JWT_SECRET } from 'index'
+import { GrantCodeToken } from 'models'
 
+// for GET /auth/login
 export const setupAuthState = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.session) throw new InternalServerError('Session not present!')
     const state = uuid()
 
-    res.locals.state = state
-    res.cookie(STATE_KEY, state, { httpOnly: true, maxAge: 15 * 60 * 1000 }) // @TODO replace with Cookie.create(STATE_KEY, state)
+    req.session.state = state
 
     next()
 }
 
+// for GET /auth/callback
 export const verifyAuthState = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.session) throw new InternalServerError('Session not present!')
+
     const { state = null } = req.query
-    const storedState = req.cookies[STATE_KEY] || null
+    const { state: storedState = null } = req.session
 
     if (state === null) throw new BadRequestError('State not present!')
     if (state !== storedState) throw new BadRequestError('State mismatch!')
 
-    res.clearCookie(STATE_KEY) // @TODO replace with Cookie.clear(STATE_KEY)
+    delete req.session.state
+
+    next()
+}
+
+// for GET /auth/token
+export const verifyAuthCode = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.session) throw new InternalServerError('Session not present!')
+
+    const { code = null } = req.query
+    const { code: storedCode = null } = req.session
+
+    const decoded: GrantCodeToken = jwt.decode(code, JWT_SECRET)
+
+    if (storedCode === null) throw new BadRequestError('You need to start athentication flow first')
+    if (code !== storedCode || Date.now() > decoded.exp) throw new ForbiddenError('Invalid token')
+
     next()
 }

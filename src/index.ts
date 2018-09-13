@@ -1,7 +1,6 @@
 import 'reflect-metadata'
 
 import { createExpressServer } from 'routing-controllers'
-import { static as staticServing } from 'express'
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import helmet from 'helmet'
@@ -22,8 +21,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(helmet())
 app.use(compression())
 
-export const STATE_KEY = 'spoti_authentication_state'
 export const SCOPES = ['user-read-email', 'user-read-private', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing']
 export const IS_DEV_ENV = app.get('env') !== 'production'
+export const FRONT_ADDR = IS_DEV_ENV ? 'http://localhost:3000' : ''
+export const SESSION_TTL_MS = 2 * 60 * 60 * 1000 // 2 hours
+export const JWT_SECRET = process.env.JWT_AUTH_SECRET || 'jakis&Sekret123'
 
 export default app

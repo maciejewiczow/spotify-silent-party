@@ -1,2 +1,3 @@
-export { LocalParam, Locals } from './localParamDecorator'
-export { Session, SessionParam } from './sessionParamDecorator'
+export * from './localParamDecorator'
+export * from './sessionParamDecorator'
+export * from './requiredDecorators'
