@@ -1,5 +1,9 @@
 import { createParamDecorator } from 'routing-controllers'
 
+export interface LocalsObject {
+    [key: string]: any
+}
+
 export function Locals(options?: { required?: boolean }) {
     return createParamDecorator({
         required: options ? options.required : false,

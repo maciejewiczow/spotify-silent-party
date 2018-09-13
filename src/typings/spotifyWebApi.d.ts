@@ -40,7 +40,8 @@ declare module 'spotify-web-api-node' {
         CurrentlyPlayingResponse,
         CurrentlyPlayingContextResponse,
         AuthenticationTokenResponse,
-        ClientCredentialsAuthResponse
+        ClientCredentialsAuthResponse,
+        CurrentUsersProfileResponse
     } from 'spotify-api-response-schemas'
 
     /**
@@ -420,8 +421,8 @@ declare module 'spotify-web-api-node' {
          *          depends on the permissions given by the user. If the promise is
          *          rejected, it contains an error object. Not returned if a callback is given.
          */
-        getMe(): Promise<ApiResponse<any>>
-        getMe(callback: CallbackFn<any>): void
+        getMe(): Promise<ApiResponse<CurrentUsersProfileResponse>>
+        getMe(callback: CallbackFn<CurrentUsersProfileResponse>): void
 
         /**
          * Get a user's playlists.
