@@ -1,10 +1,10 @@
 import { Controller, Get, Res, QueryParam, CookieParam, Redirect, HttpError, BadRequestError, UseBefore } from 'routing-controllers'
 import { Response } from 'express'
 
-import { SCOPES } from 'backend/index'
-import { SpotifyService as Spotify } from 'backend/services'
-import { LocalParam } from 'backend/utils/localParamDecorator'
-import { setupAuthState, verifyAuthState } from 'backend/middleware'
+import { SCOPES } from 'index'
+import { SpotifyService as Spotify } from 'services'
+import { LocalParam } from 'utils'
+import { setupAuthState, verifyAuthState } from 'middleware'
 
 @Controller('/auth')
 export class AuthenticationController {

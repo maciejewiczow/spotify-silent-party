@@ -1,6 +1,6 @@
 import session from 'express-session'
 
-import { StorageService } from 'backend/services'
+import { StorageService } from 'services'
 
 export const sessionMiddleware = session({
     store: StorageService.store,

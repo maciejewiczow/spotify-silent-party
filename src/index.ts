@@ -8,8 +8,8 @@ import helmet from 'helmet'
 import dotenv from 'dotenv'
 import { Express } from 'express'
 
-import controllers from 'backend/controllers'
-import { sessionMiddleware } from 'backend/middleware'
+import controllers from 'controllers'
+import { sessionMiddleware } from 'middleware'
 
 dotenv.config()
 
