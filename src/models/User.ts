@@ -1,7 +1,6 @@
 import { Spotify } from 'services'
 import { UserObjectPrivate, CurrentlyPlayingResponse } from 'spotify-api-response-schemas'
 import { ApiResponse } from 'spotify-web-api-node'
-import uuid from 'uuid'
 
 export class User {
     private _id?: string
@@ -9,6 +8,7 @@ export class User {
     private _refreshToken: string
     private _tokenExpiration: number
 
+    // @REMINDER this is just temporary solution to cache data
     private data?: UserObjectPrivate
     private playback?: ApiResponse<CurrentlyPlayingResponse>
 

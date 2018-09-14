@@ -1,25 +1,24 @@
 import 'reflect-metadata'
 
 import { createExpressServer } from 'routing-controllers'
-import bodyParser from 'body-parser'
-import compression from 'compression'
-import helmet from 'helmet'
-import dotenv from 'dotenv'
+import * as dotenv from 'dotenv'
+dotenv.config()
+import * as bodyParser from 'body-parser'
+import * as compression from 'compression'
+import * as helmet from 'helmet'
 import { Express } from 'express'
 
 import controllers from 'controllers'
 import { sessionMiddleware } from 'middleware'
 
-dotenv.config()
-
 const app: Express = createExpressServer({
     controllers
 })
 
-app.use(sessionMiddleware)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(helmet())
 app.use(compression())
+app.use(sessionMiddleware)
 
 export const SCOPES = ['user-read-email', 'user-read-private', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing']
 export const IS_DEV_ENV = app.get('env') !== 'production'

@@ -1,3 +1,3 @@
-import { AuthenticationController } from 'backend/controllers/AuthenticationController'
+import { AuthenticationController } from './AuthenticationController'
 
 export default [AuthenticationController]

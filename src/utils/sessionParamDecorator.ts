@@ -1,9 +1,5 @@
 import { createParamDecorator } from 'routing-controllers'
 
-export interface SessionObject {
-    [key: string]: any
-}
-
 export function SessionDec(options?: { required?: boolean }) {
     return createParamDecorator({
         required: options ? options.required : false,

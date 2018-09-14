@@ -2,17 +2,16 @@ import { Controller, Get, QueryParam, Redirect, UseBefore, ForbiddenError } from
 import jwt from 'jwt-simple'
 
 import { Spotify } from 'services'
+import { GRANT_CODE_TTL_MS, GrantCodeToken, AccessToken, User } from 'models'
 import { setupAuthState, verifyAuthState, verifyAuthCode } from 'middleware'
 import { SessionParam, SessionDec } from 'utils'
-
 import { SCOPES, FRONT_ADDR, SESSION_TTL_MS, JWT_SECRET } from 'index'
-import { GRANT_CODE_TTL_MS, GrantCodeToken, AccessToken } from 'models'
-import { User } from 'models/User'
 
 @Controller('/auth')
 export class AuthenticationController {
     @Get('/login')
     @UseBefore(setupAuthState)
+    @Redirect('')
     login(@SessionParam('state', { required: true }) state: string) {
         return Spotify.api.createAuthorizeURL(SCOPES, state)
     }
