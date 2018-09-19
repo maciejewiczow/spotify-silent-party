@@ -1,23 +1,22 @@
 import { BadRequestError, ForbiddenError, InternalServerError } from 'routing-controllers'
 import { NextFunction, Response, Request } from 'express'
-import uuid from 'uuid'
+import * as uuid from 'uuid'
 import jwt from 'jwt-simple'
 
 import { JWT_SECRET } from 'index'
 import { GrantCodeToken } from 'models'
 
 // for GET /auth/login
-export const setupAuthState = (req: Request, res: Response, next: NextFunction) => {
+export function setupAuthState(req: Request, res: Response, next: NextFunction) {
     if (!req.session) throw new InternalServerError('Session not present!')
-    const state = uuid()
 
-    req.session.state = state
+    req.session.state = uuid()
 
     next()
 }
 
 // for GET /auth/callback
-export const verifyAuthState = (req: Request, res: Response, next: NextFunction) => {
+export function verifyAuthState(req: Request, res: Response, next: NextFunction) {
     if (!req.session) throw new InternalServerError('Session not present!')
 
     const { state = null } = req.query
@@ -32,7 +31,7 @@ export const verifyAuthState = (req: Request, res: Response, next: NextFunction)
 }
 
 // for GET /auth/token
-export const verifyAuthCode = (req: Request, res: Response, next: NextFunction) => {
+export function verifyAuthCode(req: Request, res: Response, next: NextFunction) {
     if (!req.session) throw new InternalServerError('Session not present!')
 
     const { code = null } = req.query

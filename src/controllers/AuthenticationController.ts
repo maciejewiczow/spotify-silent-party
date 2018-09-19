@@ -1,26 +1,28 @@
-import { Controller, Get, QueryParam, Redirect, UseBefore, ForbiddenError } from 'routing-controllers'
+import { Controller, Get, QueryParam, Redirect, UseBefore, ForbiddenError, Res } from 'routing-controllers'
 import jwt from 'jwt-simple'
+import { Response } from 'express'
 
 import { Spotify } from 'services'
 import { GRANT_CODE_TTL_MS, GrantCodeToken, AccessToken, User } from 'models'
 import { setupAuthState, verifyAuthState, verifyAuthCode } from 'middleware'
-import { SessionParam, SessionDec } from 'utils'
+import { SessionParam, SessionDec, SessionRequired } from 'utils'
 import { SCOPES, FRONT_ADDR, SESSION_TTL_MS, JWT_SECRET } from 'index'
 
 @Controller('/auth')
 export class AuthenticationController {
     @Get('/login')
     @UseBefore(setupAuthState)
-    @Redirect('')
-    login(@SessionParam('state', { required: true }) state: string) {
-        return Spotify.api.createAuthorizeURL(SCOPES, state)
+    login(@SessionParam('state', { required: true }) state: string, @Res() res: Response) {
+        return res.redirect(Spotify.api.createAuthorizeURL(SCOPES, state))
     }
 
     @Get('/callback')
     @UseBefore(verifyAuthState)
     @Redirect('') // will be overwritten with function return value
     // @TODO figure out how to get Session interface out of express-session module
-    async callback(@QueryParam('code', { required: true }) code: string, @SessionDec() session: any) {
+    async callback(@Res() res: Response, @SessionRequired() session: any, @QueryParam('error') error?: string, @QueryParam('code') code?: string) {
+        if (error === 'access_denied' || !code) throw new ForbiddenError('User denied login request')
+
         const data = await Spotify.api.authorizationCodeGrant(code)
 
         const { access_token, refresh_token, expires_in } = data.body
@@ -30,7 +32,7 @@ export class AuthenticationController {
 
         if (!user.isValid()) throw new ForbiddenError('User is not suited to use this application')
 
-        session.regenerate()
+        await session.regenerateAsync()
 
         session.user = user
 
@@ -45,7 +47,7 @@ export class AuthenticationController {
 
         session.code = encodedGrant
 
-        return `${FRONT_ADDR}?code=${encodedGrant}`
+        return res.redirect(`${FRONT_ADDR}?code=${encodedGrant}`)
     }
 
     @Get('/token')
