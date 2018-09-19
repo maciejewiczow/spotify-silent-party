@@ -1,6 +1,6 @@
-import { sessionStore, store } from './connect'
+import { sessionStore, client } from './connect'
 
 export default {
     sessionStore,
-    store
+    client
 }

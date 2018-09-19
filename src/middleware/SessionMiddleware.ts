@@ -20,15 +20,12 @@ export const sessionMiddleware = [
     }),
     (req: Request, res: Response, next: NextFunction) => {
         if (!req.session) {
-            console.log('Session not present!!')
             next()
             return
         }
-        console.log('Session present and promisified')
         const promisifiedSession = promisifyAll(req.session)
         req.session = promisifiedSession
+
         next()
     }
 ]
-
-console.log('Ready middleware', sessionMiddleware[0])

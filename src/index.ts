@@ -1,29 +1,44 @@
 import 'reflect-metadata'
-
-import { createExpressServer } from 'routing-controllers'
 import * as dotenv from 'dotenv'
 dotenv.config()
+
+import { useExpressServer } from 'routing-controllers'
 import * as bodyParser from 'body-parser'
+import * as cookieParser from 'cookie-parser'
 import * as compression from 'compression'
 import * as helmet from 'helmet'
-import { Express } from 'express'
+import * as express from 'express'
 
 import controllers from 'controllers'
-import { sessionMiddleware } from 'middleware'
+import { sessionMiddleware, loggerMiddleware, errorLoggerMiddleware } from 'middleware'
 
-const app: Express = createExpressServer({
+const app = express()
+
+app.use(sessionMiddleware)
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(compression())
+app.use(helmet())
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8080')
+    res.removeHeader('X-Powered-By')
+    next()
+})
+
+export const IS_DEV_ENV = app.get('env') !== 'production'
+
+if (IS_DEV_ENV) {
+    app.use(loggerMiddleware)
+    app.use(errorLoggerMiddleware)
+}
+
+useExpressServer(app, {
     controllers
 })
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(helmet())
-app.use(compression())
-app.use(sessionMiddleware)
-
 export const SCOPES = ['user-read-email', 'user-read-private', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing']
-export const IS_DEV_ENV = app.get('env') !== 'production'
-export const FRONT_ADDR = IS_DEV_ENV ? 'http://localhost:3000' : ''
 export const SESSION_TTL_MS = 2 * 60 * 60 * 1000 // 2 hours
+export const FRONT_ADDR = IS_DEV_ENV ? 'http://localhost:8080' : ''
 export const JWT_SECRET = process.env.JWT_AUTH_SECRET || 'jakis&Sekret123'
 
 export default app
