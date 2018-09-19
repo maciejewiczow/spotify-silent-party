@@ -1,5 +1,5 @@
-import { Controller, Get, QueryParam, Redirect, UseBefore, ForbiddenError, Res } from 'routing-controllers'
-import jwt from 'jwt-simple'
+import { Controller, Get, QueryParam, UseBefore, ForbiddenError, Res, UnauthorizedError } from 'routing-controllers'
+import jwt from 'jsonwebtoken'
 import { Response } from 'express'
 
 import { Spotify } from 'services'
@@ -18,11 +18,8 @@ export class AuthenticationController {
 
     @Get('/callback')
     @UseBefore(verifyAuthState)
-    @Redirect('') // will be overwritten with function return value
     // @TODO figure out how to get Session interface out of express-session module
-    async callback(@Res() res: Response, @SessionRequired() session: any, @QueryParam('error') error?: string, @QueryParam('code') code?: string) {
-        if (error === 'access_denied' || !code) throw new ForbiddenError('User denied login request')
-
+    async callback(@Res() res: Response, @SessionRequired() session: any, @QueryParam('code') code: string) {
         const data = await Spotify.api.authorizationCodeGrant(code)
 
         const { access_token, refresh_token, expires_in } = data.body
@@ -43,7 +40,7 @@ export class AuthenticationController {
             iat: Date.now()
         }
 
-        const encodedGrant = jwt.encode(grantCode, JWT_SECRET)
+        const encodedGrant = jwt.sign(grantCode, JWT_SECRET)
 
         session.code = encodedGrant
 
@@ -61,10 +58,9 @@ export class AuthenticationController {
             iat: Date.now()
         }
 
-        const encodedToken = jwt.encode(token, JWT_SECRET)
+        const encodedToken = jwt.sign(token, JWT_SECRET)
 
         session.token = encodedToken
-        delete session.code
 
         return encodedToken
     }
