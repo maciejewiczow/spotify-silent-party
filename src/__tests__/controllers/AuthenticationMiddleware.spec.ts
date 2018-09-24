@@ -4,14 +4,11 @@ import * as sinon from 'sinon'
 import { BadRequestError, UnauthorizedError, InternalServerError } from 'routing-controllers'
 import * as jwt from 'jsonwebtoken'
 
-import * as uuid from './uuid.mock'
-const fakeUuid = sinon.stub(uuid, 'uuid').returns('some_state_string')
-
 import { setupAuthState, verifyAuthCode, verifyAuthState } from 'middleware'
 import { GrantCodeToken } from 'models'
 import { JWT_SECRET } from 'index'
 
-describe.only('Authentication middleware', () => {
+describe('Authentication middleware', () => {
     describe('GET /login middleware - setupAuthState', () => {
         it('Throws an InternalServerError if session not present', () => {
             // @ts-ignore
@@ -25,15 +22,14 @@ describe.only('Authentication middleware', () => {
             setupAuthState(req, {}, () => {})
 
             // @ts-ignore
-            expect(req.session.state).to.be.a('some_state_string')
-            expect(fakeUuid.called).to.be.true
+            expect(req.session.state).to.be.a('string')
         })
     })
 
     describe('GET /callback middleware - verifyAuthState', () => {
-        let req: any
-        let res: any
-        let next: sinon.SinonSpy
+        let req: any,
+            res: any = {},
+            next = sinon.spy()
 
         beforeEach(() => {
             req = {
@@ -45,8 +41,6 @@ describe.only('Authentication middleware', () => {
                     state: 'some_state'
                 }
             }
-            res = {}
-            next = sinon.spy()
         })
 
         afterEach(() => next.resetHistory())
@@ -83,16 +77,15 @@ describe.only('Authentication middleware', () => {
     })
 
     describe('GET /token middleware - verifyAuthCode', () => {
-        let req: any
-        let res: any
-        let next: sinon.SinonSpy
-        let codeToken: GrantCodeToken
+        let req: any,
+            codeToken: Partial<GrantCodeToken>,
+            res: any = {},
+            next = sinon.spy()
 
         beforeEach(() => {
             codeToken = {
-                exp: Date.now() + 60 * 60 * 1000,
+                exp: Math.floor(Date.now() / 1000) + 60 * 60,
                 userId: 'some_id',
-                iat: Date.now(),
                 isGrantToken: true
             }
             req = {
@@ -103,8 +96,6 @@ describe.only('Authentication middleware', () => {
                     code: 'some_code'
                 }
             }
-            res = {}
-            next = sinon.spy()
         })
 
         afterEach(() => next.resetHistory())
@@ -137,8 +128,7 @@ describe.only('Authentication middleware', () => {
             expect(verifyAuthCode.bind(verifyAuthCode, req, res, next)).to.throw(UnauthorizedError, 'Token mismatch')
         })
         it('Throws UnauthorizedError if code is expired', () => {
-            codeToken.exp = Date.now() - 4 * 60 * 60 * 1000
-            codeToken.iat = Date.now()
+            codeToken.exp = Math.floor(Date.now() / 1000) - 4 * 60 * 60
             const code = jwt.sign(codeToken, JWT_SECRET)
 
             req.query.code = req.session.code = code
