@@ -1,0 +1,6 @@
+-r ts-node/register
+-r tsconfig-paths/register
+--slow 200
+--timeout 10000
+--watch-extensions ts
+src/__tests__/**/*.spec.ts

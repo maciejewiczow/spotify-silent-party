@@ -4,8 +4,9 @@
     "description": "App that allows you to sync playback of several premium users together via network, creating silent party",
     "main": "server.ts",
     "scripts": {
-        "test": "set TS_NODE_FILES=true & mocha -r ts-node/register -r tsconfig-paths/register src/__tests__/**/*.spec.ts",
-        "test:w": "start \"Tester\" npm test -- -w",
+        "test": "npm run test:basic -- --exit",
+        "test:watch": "start \"Tester\" npm run test:basic -- --watch",
+        "test:basic": "set TS_NODE_FILES=true & mocha --opts ./mocha.opts",
         "restart": "ts-node --files -r tsconfig-paths/register src/server.ts",
         "start": "start \"Server dev\" npm restart"
     },
