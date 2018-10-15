@@ -1,6 +1,8 @@
 import * as session from 'express-session'
 import * as createStore from 'connect-redis'
 import * as redis from 'redis'
+import * as dotenv from 'dotenv'
+dotenv.config()
 import { promisifyAll } from 'bluebird'
 
 const SessionStorage = createStore(session)
