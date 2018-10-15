@@ -39,6 +39,6 @@ useExpressServer(app, {
 export const SCOPES = ['user-read-email', 'user-read-private', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing']
 export const SESSION_TTL_MS = 2 * 60 * 60 * 1000 // 2 hours
 export const FRONT_ADDR = IS_DEV_ENV ? 'http://localhost:8080' : ''
-export const JWT_SECRET = process.env.JWT_AUTH_SECRET || 'jakis&Sekret123'
+export const JWT_SECRET = process.env.JWT_AUTH_SECRET || '6964c11c-dcaa-55a7-a43b-0501e6ac4903'
 
 export default app
