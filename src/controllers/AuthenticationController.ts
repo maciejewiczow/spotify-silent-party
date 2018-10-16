@@ -1,25 +1,27 @@
-import { Controller, Get, QueryParam, UseBefore, ForbiddenError, Res, UnauthorizedError } from 'routing-controllers'
+import { Controller, Get, QueryParam, UseBefore, ForbiddenError, Res, UnauthorizedError, Redirect, HttpCode } from 'routing-controllers'
 import jwt from 'jsonwebtoken'
 import { Response } from 'express'
 
 import { Spotify } from 'services'
 import { GRANT_CODE_TTL_MS, GrantCodeToken, AccessToken, User } from 'models'
 import { setupAuthState, verifyAuthState, verifyAuthCode } from 'middleware'
-import { SessionParam, SessionDec, SessionRequired } from 'utils'
+import { SessionParam, SessionDec, SessionRequired, SessionParamRequired } from 'utils'
 import { SCOPES, FRONT_ADDR, SESSION_TTL_MS, JWT_SECRET } from 'index'
 
 @Controller('/auth')
 export class AuthenticationController {
     @Get('/login')
     @UseBefore(setupAuthState)
-    login(@SessionParam('state', { required: true }) state: string, @Res() res: Response) {
-        return res.redirect(Spotify.api.createAuthorizeURL(SCOPES, state))
+    @Redirect('http://google.com') // will be overriden by function return val, same below
+    login(@SessionParamRequired('state') state: string) {
+        return Spotify.api.createAuthorizeURL(SCOPES, state)
     }
 
     @Get('/callback')
     @UseBefore(verifyAuthState)
+    @Redirect('http://google.com')
     // @TODO figure out how to get Session interface out of express-session module
-    async callback(@Res() res: Response, @SessionRequired() session: any, @QueryParam('code') code: string) {
+    async callback(@SessionRequired() session: any, @QueryParam('code') code: string) {
         const data = await Spotify.api.authorizationCodeGrant(code)
 
         const { access_token, refresh_token, expires_in } = data.body
@@ -44,7 +46,7 @@ export class AuthenticationController {
 
         session.code = encodedGrant
 
-        return res.redirect(`${FRONT_ADDR}?code=${encodedGrant}`)
+        return `${FRONT_ADDR}?code=${encodedGrant}`
     }
 
     @Get('/token')
