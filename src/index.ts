@@ -10,11 +10,10 @@ import * as helmet from 'helmet'
 import * as express from 'express'
 
 import controllers from 'controllers'
-import { sessionMiddleware, loggerMiddleware, errorLoggerMiddleware } from 'middleware'
+import { loggerMiddleware, errorLoggerMiddleware } from 'middleware'
 
 const app = express()
 
-app.use(sessionMiddleware)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(compression())

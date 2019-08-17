@@ -4,28 +4,11 @@ import * as sinon from 'sinon'
 import { BadRequestError, UnauthorizedError, InternalServerError } from 'routing-controllers'
 import * as jwt from 'jsonwebtoken'
 
-import { setupAuthState, verifyAuthCode, verifyAuthState } from 'middleware'
+import { verifyAuthCode, verifyAuthState } from 'middleware'
 import { GrantCodeToken } from 'models'
 import { JWT_SECRET } from 'index'
 
 describe('Authentication middleware', () => {
-    describe('GET /login middleware - setupAuthState', () => {
-        it('Throws an InternalServerError if session not present', () => {
-            // @ts-ignore
-            expect(setupAuthState.bind(setupAuthState, {}, {}, () => {})).to.throw(InternalServerError, 'Session not present!')
-        })
-        it('Creates a state string and saves it to session', () => {
-            const req = {
-                session: {}
-            }
-            // @ts-ignore
-            setupAuthState(req, {}, () => {})
-
-            // @ts-ignore
-            expect(req.session.state).to.be.a('string')
-        })
-    })
-
     describe('GET /callback middleware - verifyAuthState', () => {
         let req: any,
             res: any = {},
