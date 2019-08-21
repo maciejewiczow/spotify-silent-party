@@ -3,6 +3,7 @@ import * as request from 'supertest';
 import * as sinon from 'sinon';
 import * as nodeUrl from 'url';
 import * as jwt from 'jsonwebtoken';
+import * as helpers from 'sinon-helpers';
 
 import { Spotify } from 'services';
 import { User } from 'models';
