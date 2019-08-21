@@ -1,3 +1,2 @@
-export * from './AuthenticationMiddleware'
-export * from './SessionMiddleware'
-export * from './LoggerMiddleware'
+export * from './AuthenticationMiddleware';
+export * from './LoggerMiddleware';

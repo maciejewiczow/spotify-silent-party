@@ -1,5 +1,5 @@
-import app from 'index'
+import app from 'index';
 
-const SERVER_PORT = process.env.PORT || 8080 // heroku setup
+const SERVER_PORT = process.env.PORT || 8080; // heroku setup
 
-const server = app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}`))
+const server = app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}`));
