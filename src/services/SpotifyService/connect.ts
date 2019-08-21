@@ -1,4 +1,4 @@
-import SpotifyApi from 'spotify-web-api-node';
+import SpotifyApi = require('spotify-web-api-node');
 
 export const api = new SpotifyApi({
     clientId: process.env.SPOTIFY_APP_ID,
