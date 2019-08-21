@@ -3,7 +3,7 @@ import * as request from 'supertest';
 import * as sinon from 'sinon';
 import * as nodeUrl from 'url';
 import * as jwt from 'jsonwebtoken';
-import * as helpers from 'sinon-helpers';
+import {getStubConstructor} from 'sinon-helpers';
 
 import { Spotify } from 'services';
 import { User } from 'models';
@@ -12,7 +12,7 @@ const codeGrantStub = sinon.stub(Spotify.api, 'authorizationCodeGrant');
 const userValidateStub = sinon.stub(User.prototype, 'isValid');
 const jwtSignStub = sinon.stub(jwt, 'sign');
 const userLoadDataSpy = sinon.spy(User.prototype, 'loadData');
-const userNewSpy = sinon.spy(User.prototype, 'constructor');
+const userNewSpy = getStubConstructor(User).withInit(() => {});
 
 import app from 'index';
 
