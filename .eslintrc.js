@@ -72,6 +72,7 @@ module.exports = {
             {
                 'devDependencies': [
                     '**/eslint-config.js',
+                    '**/*.d.ts',
                     '**/*.spec.ts',
                     '**/*.spec.tsx'
                 ]
