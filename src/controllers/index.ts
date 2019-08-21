@@ -1,3 +1,5 @@
-import { AuthenticationController } from './AuthenticationController'
+import { SpotifyAuthenticationController } from './SpotifyAuthenticationController';
+import { AuthenticationController } from './AuthenticationController';
 
-export default [AuthenticationController]
+// exported as array, because routing-controllers expexts an array of controllers in it's setup
+export default [SpotifyAuthenticationController, AuthenticationController];
