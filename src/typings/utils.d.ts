@@ -1,0 +1,1 @@
+type PromiseValueT<T> = T extends Promise<infer V> ? V : T;
