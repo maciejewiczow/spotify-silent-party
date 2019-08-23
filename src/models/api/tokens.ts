@@ -1,3 +1,8 @@
+export interface ExpiringJWT {
+    iat: number;
+    exp: number;
+}
+
 /**
  * Scheme of access tokens, used to authenticte users in endpoints needing privilages to use
  *
@@ -10,34 +15,30 @@
  * @property userId - id of user who owns the token
  */
 export interface AccessToken {
-    exp: number;
-    iat: number;
     isAccessToken: true;
     accessLevel: AccessLevel;
     userId: string;
 }
 
+/**
+ * Enum containing all possible user access levels
+ *
+ * @enum {number}
+ */
 export enum AccessLevel {
     normal = 0,
     partyAdmin = 1
 }
 
-export const SESSION_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours
-export const GRANT_CODE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-
 /**
- * Scheme of grant code token, used to get the acces token by clients
+ * Token returned from /auth/url, used to verify state that came back from spotify
  *
- * @interface GrantCodeToken
- *
- * @property exp - expiration date
- * @property iat - token issue date
- * @property isGrantToken - identifies this token as grant code
- * @property userId - id of user, who tries to obtain access token
+ * @interface StateToken
+ * @extends {ExpiringJWT}
  */
-export interface GrantCodeToken {
-    exp: number;
-    iat: number;
-    isGrantToken: true;
-    userId: string;
+export interface StateToken {
+    isStateToken: true;
+    state: string;
 }
+
+export const STATE_TOKEN_TTL = 60 * 60; // 1h
