@@ -1,13 +1,13 @@
 import 'reflect-metadata';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 dotenv.config();
 
 import { useExpressServer } from 'routing-controllers';
-import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
-import * as compression from 'compression';
-import * as helmet from 'helmet';
-import * as express from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+import helmet from 'helmet';
+import express from 'express';
 
 import controllers from 'controllers';
 import { loggerMiddleware, errorLoggerMiddleware } from 'middleware';
@@ -24,7 +24,8 @@ app.use((req, res, next) => {
     next();
 });
 
-export const IS_DEV_ENV = app.get('env') !== 'production';
+export const NODE_ENV = app.get('env');
+export const IS_DEV_ENV = NODE_ENV === 'dev';
 
 if (IS_DEV_ENV) {
     app.use(loggerMiddleware);
