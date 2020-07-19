@@ -38,7 +38,6 @@ export enum AccessLevel {
  */
 export interface StateToken {
     isStateToken: true;
-    state: string;
 }
 
 export const STATE_TOKEN_TTL = 60 * 60; // 1h
