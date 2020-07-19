@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
-import * as fs from 'fs';
+import fs from 'fs';
 import { HttpError } from 'routing-controllers';
 
 const replacer = () => {
@@ -24,7 +24,7 @@ const replacer = () => {
     };
 };
 
-export function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
+export function loggerMiddleware(req: Request, res: Response, next: NextFunction): void {
     console.log(`Incoming request from ${req.ip} to ${req.path} endpoint`);
     next();
 }
@@ -34,7 +34,7 @@ export function errorLoggerMiddleware(
     req: Request,
     res: Response,
     next: NextFunction
-) {
+): void {
     console.error('Error happened! ', JSON.stringify(err, replacer(), 2));
 
     fs.writeFileSync('logs/req.json', JSON.stringify(req, replacer(), 2), { encoding: 'utf8' });
