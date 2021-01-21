@@ -68,7 +68,7 @@
         "redis": "^2.8.0",
         "reflect-metadata": "^0.1.12",
         "routing-controllers": "^0.7.7",
-        "socket.io": "^2.1.1",
+        "socket.io": "^2.4.0",
         "spotify-web-api-node": "^4.0.0",
         "ts-node": "^7.0.0",
         "uuid": "^3.3.2"
